@@ -1,6 +1,7 @@
 # TP2 : Suite de la découverte de Docker
 
-Noms des auteurs :  DAUB Justin
+Noms des auteurs :  DAUB Justin, EBERHART Yonas, GROLAUX Baptiste
+
 Date de réalisation : 10/02/2026
 
 ## 1. Les volumes Docker
@@ -70,12 +71,15 @@ Lors de l'exécution de la commande ```docker compose up```, on remarque dans le
 On retrouve bien leur volume commun, leur network a eux et leur image. 
 
 **Containers du compose up**
+
 ![Containers du compose up](/TP2/pictures/compose-containers.png)
 
 **Network du compose up**
+
 ![Network du compose up](/TP2/pictures/compose-networks.png)
 
 **Volume du compose up**
+
 ![Volume du compose up](/TP2/pictures/compose-volumes.png)
 
 Avec le même volume partagés par ces 2 conteneurs, il y a bien la même page web modifié sur les 2 ports, et en faisant un ping entre eux, il communiquent sans problèmes tout en utilisant leur nom de containers.
@@ -95,18 +99,17 @@ Avec le même volume partagés par ces 2 conteneurs, il y a bien la même page w
 
  L'infrastructure est bien conforme à ce qui était attendu, afin de pouvoir vérifier ceci, il a fallu : 
  - Vérifier que les 3 containers sont bien crées : 
-![Création des containers](./pictures/4.1%20compose.png)
-![Vérification des containers](./pictures/4.1%20containers.png)
+![Vérification des containers](/TP2/pictures/4.1%20containers.png)
  - Vérifier que les 2 réseaux sont bien crées : 
-![Vérification des réseaux](./pictures/4.1%20networks.png)
+![Vérification des réseaux](/TP2/pictures/4.1%20networks.png)
  - Vérifier que les 2 volumes sont bien crées : 
-![Vérification des volumes](./pictures/4.1%20volume.png)
+![Vérification des volumes](/TP2/pictures/4.1%20volume.png)
  - Tester le volume docker des containersA et B en créant un ficher dans le volume partagé du containerA et vérifier qu'il existe bien dans le containerB : 
-![Test volume docker](./pictures/4.1%20test_volume.png)
+![Test volume docker](/TP2/pictures/4.1%20test_volume.png)
  - Tester que les containers puissent communiquer entre eux, et qu'ils soient bien isolés (communication possible entre A et B, et C et B, mais pas possible pour A et C car réseau pas en commun) :
-![Test ping docker](./pictures/4.1%20networks_test.png)
+![Test ping docker](/TP2/pictures/4.1%20networks_test.png)
  - Tester que le bind mount fonctionne en vérifiant la présence du src, sur l'ordinateur hôte
-![Test bind mount docker](./pictures/4.1%20test_bind_mount.png)
+![Test bind mount docker](/TP2/pictures/4.1%20test_bind_mount.png)
 ### 4.2. Exemple du cours théorique
 
 1. Dans cette infrastructure, comment les données sont-elles partagées?  Via des Bind Mounts ou des Volumes?  Pourquoi ? 
@@ -126,13 +129,13 @@ Le container DB est un serveur de base de donnés, qui est connecté au réseau 
 Oui l'infrastructure est conforme a ce qui était attendu, pour le valider : 
 
 - Vérification de bon attributions des ports, on vérifie que le port 3000 de l'hôte est bien relié au port 80 du container :
-![Vérification ports](./pictures/4.2%20services.png)
+![Vérification ports](/TP2/pictures/4.2%20services.png)
 - Vérification du bind mount, on vérifie que le ficher hôte existe bien dans le container (dossier `/app` dans le container) :
-![Vérification bind mount](./pictures/4.2%20bind-mount.png)
+![Vérification bind mount](/TP2/pictures/4.2%20bind-mount.png)
 - Vérification du volume docker, on vérifie que le volume du container db existe bien et qu'il bien attaché à la DB : 
-![Vérification volume docker](./pictures/4.2%20volume.png)
+![Vérification volume docker](/TP2/pictures/4.2%20volume.png)
 - Vérification du réseau, on fait un ping du container web vers le container db : 
-![Vérification réseau](./pictures/4.2%20ping.png)
+![Vérification réseau](/TP2/pictures/4.2%20ping.png)
 
 ### 4.3. Exemple du tutoriel Docker
 
