@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  container-a:
+    image: nginx
+    container_name: ContainerA
+    command: tail -f /dev/null # Garde le container actif
+    volumes:
+      - volume1:/app
+      - ./src:/src # Bind mount (répertoire hôte ./src)
+    networks:
+      - reseau1
+
+  container-b:
+    image: nginx
+    container_name: ContainerB
+    command: tail -f /dev/null
+    volumes:
+      - volume1:/app1
+      - volume2:/app2
+    networks:
+      - reseau1
+      - reseau2
+
+  container-c:
+    image: nginx
+    container_name: ContainerC
+    command: tail -f /dev/null
+    volumes:
+      - volume2:/app
+    networks:
+      - reseau2
+
+networks:
+  reseau1:
+    driver: bridge
+  reseau2:
+    driver: bridge
+
+volumes:
+  volume1:
+  volume2:
