@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  db:
+    image: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: mypass
+    volumes:
+      # Injecte automatiquement tes produits au premier lancement !
+      - ./woodytoys.sql:/docker-entrypoint-initdb.d/woodytoys.sql
+    restart: always
+
+  php:
+    build: ./php-container
+    volumes:
+      - ./html:/var/www/html
+    restart: always
+
+  web:
+    build: .
+    ports:
+      - "80:80"
+    volumes:
+      - ./html:/var/www/html
+    depends_on:
+      - php
+      - db
+    restart: always

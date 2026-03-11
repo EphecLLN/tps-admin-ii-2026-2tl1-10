@@ -1,0 +1,19 @@
+$TTL    86400
+@       IN      SOA     ns1.l1-10.ephec-ti.be. admin.l1-10.ephec-ti.be. (
+                              6         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                          86400 )       ; Negative Cache TTL
+
+@       IN      NS      ns1.l1-10.ephec-ti.be.
+
+ns1     IN      A       91.134.138.155
+@       IN      A       91.134.138.155
+www     IN      A       91.134.138.155
+
+ns1     IN      AAAA    2001:41d0:305:2100::1:138b
+@       IN      AAAA    2001:41d0:305:2100::1:138b
+www     IN      AAAA    2001:41d0:305:2100::1:138b
+
+blog	IN	CNAME	@
