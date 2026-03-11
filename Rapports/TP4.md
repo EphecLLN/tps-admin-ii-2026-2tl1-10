@@ -186,7 +186,28 @@ On peut améliorer ceci en mettant en place un autre serveur, mais vu qu'on a pa
 
 Pour cela on ajoute dans le fichier de zone `l1-10.ephec-ti.be.zone` juste après la la déclaration de `ns1`, la déclaration de `ns2`, ainsi qu'un `@`, le ficher est mainteant de cette forme : 
 ```
-METTRE CONTENU DU FICHER ICI
+$TTL    86400
+@       IN      SOA     ns1.l1-10.ephec-ti.be. admin.l1-10.ephec-ti.be. (
+                              8         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                          86400 )       ; Negative Cache TTL
+
+@       IN      NS      ns1.l1-10.ephec-ti.be.
+@       IN      NS      ns2.l1-10.ephec-ti.be.
+
+ns1     IN      A       91.134.138.155
+ns2     IN      A       91.134.138.111
+@       IN      A       91.134.138.155
+www     IN      A       91.134.138.155
+
+ns1     IN      AAAA    2001:41d0:305:2100::1:138b
+ns2     IN      AAAA    2001:41d0:305:2100::1:121b
+@       IN      AAAA    2001:41d0:305:2100::1:138b
+www     IN      AAAA    2001:41d0:305:2100::1:138b
+
+blog    IN      CNAME   @
 ```
 
 Ensuite on reconstruit l'image Docker : 
@@ -198,7 +219,7 @@ docker run -d --name=dns -p 53:53/udp -p 53:53/tcp mon-dns-l1-10
 
 On refais ensuite le test en ajoutant `ns2.l1-10.ephec-ti.be` dans la liste des serveurs de noms dans les options : 
 
-**METRE RESULTAT ICI** 
+![Résultat après l'ajout du 2ème serveur virtuelle](/TP4/pictures/1.4%20Zonemaster%20apres%20modif.png)
 
 ## 1.5. Pour aller plus loin [facultatif]
 
