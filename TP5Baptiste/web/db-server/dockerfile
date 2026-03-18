@@ -1,0 +1,8 @@
+FROM mariadb:latest
+
+# On définit le mot de passe root et la DB par défaut via variables d'env
+ENV MYSQL_ROOT_PASSWORD=mypass
+ENV MYSQL_DATABASE=woodytoys
+
+# Copie automatique du script d'initialisation
+COPY woodytoys.sql /docker-entrypoint-initdb.d/

@@ -1,0 +1,29 @@
+services:
+  db-service:
+    image: mariadb
+    container_name: mariadbtest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: mypass
+      MYSQL_DATABASE: woodytoys
+    volumes:
+      - ./woodytoys.sql:/docker-entrypoint-initdb.d/woodytoys.sql
+
+  php-service:
+    build: ./php  # Chemin vers le dossier contenant votre Dockerfile PHP
+    container_name: php
+    restart: always
+    volumes:
+      - ./www/html:/var/www/html
+
+  web-service:
+    build: .      # Chemin vers le dossier contenant votre Dockerfile Nginx
+    container_name: web
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./www/html:/var/www/html
+    depends_on:
+      - php-service
+      - db-service

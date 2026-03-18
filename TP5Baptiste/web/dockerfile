@@ -1,0 +1,10 @@
+FROM nginx:latest
+
+# On remplace la config par défaut par la nôtre
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# On crée le dossier cible pour le volume
+RUN mkdir -p /var/www/html/www
+
+# Exposition du port web
+EXPOSE 80
