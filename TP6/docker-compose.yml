@@ -1,0 +1,46 @@
+services:
+  nginx:
+    build: .
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./html:/var/www/html
+      - ./certificate:/etc/nginx/ssl
+      - ./letsencrypt:/etc/letsencrypt
+    depends_on:
+      - php
+    networks:
+      - dmz
+    restart: always
+
+  mariadb:
+    image: mariadb:11.1
+    env_file:
+      - db/root.env
+      - db.env
+    volumes:
+      - ./woodytoys.sql:/docker-entrypoint-initdb.d/woodytoys.sql
+      - ./my-resolve.cnf:/etc/mysql/conf.d/my-resolve.cnf
+      - db_data:/var/lib/mysql
+    networks:
+      - db_net
+    restart: always
+
+  php:
+    build: ./php-container
+    volumes:
+      - ./html:/var/www/html
+    env_file:
+      - db.env
+    networks:
+      - dmz
+      - db_net
+    restart: always
+
+networks:
+  dmz:
+  db_net:
+
+volumes:
+  db_data:
