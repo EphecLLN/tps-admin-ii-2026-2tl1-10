@@ -131,8 +131,15 @@ On avoir 2 ports pour le chiffrement du mail avec 2 types de TLS :
 
 - Analysez votre capture WiresharkDémarrez une capture Wireshark sur votre poste client avant d'envoyer un message depuis un compte de votre domaine, puis de le recevoir.  
 
-**A FAIRE**
+![Analyse Wireshark](../TP7/pictures/2.1%20Wireshark.png)
 
+L'analyse du trafic avec Wireshark, nous démonotre que la communication entre le client de messagerie (Thunderbird) et le serveur mail est bien sécurisée de bout en bout grâce au protocole TLS :
+- **Établissement de la connexion sécurisée (Le Handshake)** : On voit l'échange intial permettant de négocier le chiffrement, à la ligne `14`, le client (IP locale) envoie un `Client Hello` en TLSv1.3 à destination du serveur, indiquant qu'il souhaite discuter avec `mail.l1-10.ephec-ti.be`
+  - A la ligne `25` le serveur répond, suivi immédiatement du changement de suite cryptographique (`Change Cipher Spec`)
+
+- **Le trafic chiffré (La protection des données)** : A la fin du Handshake, toutes les données échangées deviennent illisibles pour un observateur extérieur.
+  - A partie de la ligne `25` et pour toutes les trames suivantes (les lignes marquées `TLSv1.3` et `TLSv1.2`), le contenu des paquets est remplacé par la mention générique `Application Data`.
+ 
 - Pour l'envoi, quel est le numéro de port utilisé?  S'agit-il de TLS implicite ou explicite (voir STARTTLS) ?
 
 Pour l'envoi, c'est le **port 587**, c'est le port qui correspond au **TLS explicite (STARTTLS)**
@@ -189,7 +196,9 @@ Documentez et commentez le résultat MXToolbox de cette étape.
 
 ![2ème résultat MXToolbox](../TP7/pictures/2.2.1%202ème%20MxToolBox.png)
 
-- Les 2 lignes vertes en bas du tableau confirment que c'est la mise en place des records est un succès
+- Les 2 lignes vertes en bas du tableau confirment que c'est la mise en place des records est un succès, l'adresse IP du serveur (`91.134.138.155`) pointe bien en *Reverse DNS* (PTR) vers le nom de domaine complet (`mail.l1-10.ephec-ti.be`), et inversement. L'identité du serveur est donc vérifiée et valide
+- Les erreurs que l'on peut apercevoir sont des **faux positifs** liés à la robustesse de la sécurité du serveur. Le module de sécurité a volontairement coupé la connexion car le robot de MXToolbox s'est comporté comme un spammeur en essayant d'envoyer des commandes avant même que le serveur n'ai eu le temps de faire le *SMTP greeting*.
+- C'est donc pas sécurité que le serveur n'a pas répondu.
 
 ### 2.2.2. SPF
 
@@ -197,9 +206,13 @@ Documentez et commentez le résultat MXToolbox de cette étape.
 
 ![Résultat SPF](../TP7/pictures/2.2.2%20Résultat%20SPF.png)
 
+Sur ce résultat on retrouve : 
+- **Le succès de la validation** : Avec `Result code: pass`, on a la preuve que le serveur de test à réussi à interroger le serveur DNS, et à lire l’enregistrement TXT. 
+- **Fonctionnement de la règle** : La ligne `Result: pass (Mechanism 'mx' matched)` confirme que la configuration qui a été mise en place (`v=spf1  mx -all`) fonctionne exactement comme prévu. L'outil a analysé l'adresse IP de l'expéditeur, puis a vérifié qu'elle correspondait bien au serveur MX déclaré pour le domaine, et à autorisé le message. 
+
 - Indiquez les résultats de l'envoi d'un mail vers une adresse extérieure.  
 
-**A FAIRE**
+![Résultat envoi email vers une adresse extérieure](../TP7/pictures/2.2.2%20Envoi%20SPF.png)
 
 ### 2.2.3. DKIM
 
@@ -222,7 +235,7 @@ Ensuite on copie le texte que nous avons récupéré, pour le mettre dans le fic
 
 - Validez cette configuration en montrant un en-tête de mail
 
-**A FAIRE**
+![En tête avec signature DKIM](../TP7/pictures/2.2.3%20DKIM.png)
 
 - Montrez et commentez le résultat de l'analyse DKIM Validator. 
 
@@ -238,7 +251,10 @@ Le DMARC se met tout simplement en place, en ajoutant une ligne pour DMARC à la
 
 ![Résultat DMARC](../TP7/pictures/2.2.4%20Résultat%20DMARC.png)
 
-**A COMMENTER ET A VERIFIER**
+Le résultat du DMARC nous révèle que : 
+- **La Validation a fonctionné** (`dmarc=pass`) : Le serveur a vérifié l'alignement SPF et/ou DKIM du message entrant et confirme que l'e-mail est légitime et correspond bien au domaine expéditeur.
+- **Lecture de la politique distante** (`p=quarantine`) : Le servuer a correctment interrogé le DNS de l'expéditeur (`mailo.fr`) et a identifié que sa politique DMARC exige de mettre en quarantaine les messages frauduleux. 
+- **Action appliquée** (`dis=none`) : Le test DMARC ayant été validé (`pass`), la disposition appliqué par le serveur est `none` (aune pénalité). Le message a donc été livré normalement dans la boîte de réception.
 
 - Montrez le score SpamAssassin et commentez-le.  Comment l'optimiser? 
 
