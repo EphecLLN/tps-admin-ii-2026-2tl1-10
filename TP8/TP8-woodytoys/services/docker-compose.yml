@@ -1,0 +1,56 @@
+version: "3.9"
+
+services:
+  db:
+    image: gloutamax/woody_database:latest
+    networks:
+      - woodynet
+    cap_add:
+      - SYS_NICE
+    restart: always
+    environment:
+      - MYSQL_DATABASE=woody
+      - MYSQL_ROOT_PASSWORD=pass
+
+  redis:
+    image: redis:alpine
+    networks:
+      - woodynet
+    deploy:
+      replicas: 1
+
+  api:
+    image: gloutamax/woody_api:v2
+    networks:
+      - woodynet
+    deploy:
+      replicas: 10
+    depends_on:
+      - db
+      - redis
+
+  front:
+    image: gloutamax/woody_front:v4
+    networks:
+      - woodynet
+    deploy:
+      replicas: 2
+
+  reverse:
+    image: gloutamax/woody_rp:latest
+    networks:
+      - woodynet
+    ports:
+      - target: 8080
+        published: 80
+        protocol: tcp
+        mode: host
+    deploy:
+      mode: global
+    depends_on:
+      - front
+      - api
+
+networks:
+  woodynet:
+    driver: overlay
