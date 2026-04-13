@@ -1,0 +1,18 @@
+options {
+    directory "/var/cache/bind";
+
+    // Désactiver la récursion : CRUCIAL pour un DNS public (évite les attaques DDoS)
+    recursion no;
+
+    // Autoriser tout le monde à interroger notre serveur
+    allow-query { any; };
+
+    // Interdire le transfert de zone aux inconnus
+    allow-transfer { none; };
+
+    // Cacher la version de Bind
+    version "none";
+
+    dnssec-validation auto;
+    listen-on-v6 { any; };
+};
