@@ -4,7 +4,7 @@
 
 ## 1. Description du bug
 
-**Nom du groupe :** DAUB Justin, EBERHART Yonas, GROLAUX Baptiste
+**Nom du groupe :** 2TL1-10
 
 **Noms des auteurs du bug report :** DAUB Justin, EBERHART Yonas, GROLAUX Baptiste
 
