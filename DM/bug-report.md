@@ -74,7 +74,7 @@ http {
 
 - **Instructions de lancement :**
 
-    Placez les deux fichiers ci-dessus dans un dossier vide.
+    Placez les deux fichiers ci-dessus dans un dossier vide. (Ces fichiers sont aussi trouvables sur le repo de notre groupe dans le Dossier `DM/ex-troubleshooting`, sur la branche `Master`, et non `Main`).
 
     Lancez l'infrastructure avec : `docker compose up -d`
 
