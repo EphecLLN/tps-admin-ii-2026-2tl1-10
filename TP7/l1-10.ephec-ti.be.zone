@@ -1,0 +1,33 @@
+$TTL    86400
+@       IN      SOA     ns1.l1-10.ephec-ti.be. admin.l1-10.ephec-ti.be. (
+                             14         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                          86400 )       ; Negative Cache TTL
+
+@       IN      NS      ns1.l1-10.ephec-ti.be.
+@	IN	NS	ns2.l1-10.ephec-ti.be.
+@       IN      MX  10  mail.l1-10.ephec-ti.be. 
+
+ns1     IN      A       91.134.138.155
+ns2	IN	A	91.134.138.111
+@       IN      A       91.134.138.155
+www     IN      A       91.134.138.155
+mail	IN	A	91.134.138.155
+
+ns1     IN      AAAA    2001:41d0:305:2100::1:138b
+ns2	IN	AAAA	2001:41d0:305:2100::1:121b
+@       IN      AAAA    2001:41d0:305:2100::1:138b
+www     IN      AAAA    2001:41d0:305:2100::1:138b
+mail	IN	AAAA	2001:41d0:305:2100::1:138b
+
+blog	IN	CNAME	@
+
+@               IN  TXT  "v=spf1 mx -all"
+_dmarc          IN  TXT  "v=DMARC1; p=none; rua=mailto:admin@l1-10.ephec-ti.be;"
+mail._domainkey IN      TXT     ( "v=DKIM1; h=sha256; k=rsa; "
+          "p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxwOect0Iq9qwvZZ/nTaSLJNZi3A0gdAkKlHD93k0FGrWR1Tmg8igMxKbAYj83eLXe56bePPK6Q48vRpBgynoqbN8nAoDp4q0WGt5QbHfpqETDJapXSecTfc2dNgO/kEi/Eg17ZDEMv80OPwhX/JRbz7nYqsCICO0kZyPlTpZffeJWljmBgtIF23KFMHKzpCruO/eDg+fT6P4HR"
+          "KIWgdn3hwPGP/lMRYMypoXmcM19ZsL0Hj1kS/IWIFw3UyOenUF3XMA2qKPw3hFieyOcJ90O2i6XC8Pb8kVQGg83u19WLP4bZWPtW7bx6s3NXGdZ/z24qg1iRu50k5rKsyOcDnXSwIDAQAB" )  ; ----- DKIM key mail for l1-10.ephec-ti.be
+
+_acme-challenge   IN   TXT   "YG3cw_AbWJ5MIDhnJYkmM4yYx6eDcvSq8A9j2LvN1Kk"

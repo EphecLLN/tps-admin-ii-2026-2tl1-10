@@ -1,0 +1,28 @@
+version: "3"
+name: tp2
+services:
+  web1:
+    image: nginx
+    ports:
+      - 80:80
+    networks:
+      - my-net
+    volumes: 
+      - web-volume:/usr/share/nginx/html/
+  web2:
+    image: nginx
+    ports:
+      - 81:80 
+    volumes: 
+      - web-volume:/usr/share/nginx/html/
+    networks:
+      - my-net
+volumes: 
+  web-volume:
+
+networks: 
+  my-net:
+    driver: bridge
+    ipam: 
+      config:
+        - subnet: 10.0.1.0/24

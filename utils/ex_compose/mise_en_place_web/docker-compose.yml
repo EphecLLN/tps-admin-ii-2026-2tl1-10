@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  web_maintenance:
+    image: nginx
+    container_name: web_maintenance
+    restart: unless-stopped
+    ports:
+      - "8888:80"
+    volumes:
+      - ./html_secours:/usr/share/nginx/html
+    networks:
+      - urgence_net
+
+networks:
+  urgence_net:
