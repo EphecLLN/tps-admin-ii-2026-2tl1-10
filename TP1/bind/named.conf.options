@@ -1,0 +1,15 @@
+options {
+    directory "/var/cache/bind";
+
+    # 1. Autoriser tout le monde 
+    allow-query { any; };
+    recursion yes;
+
+    # 2. Le Forwarder vers Google
+    forwarders {
+        8.8.8.8;
+    };
+
+    dnssec-validation auto;
+    listen-on-v6 { any; };
+};

@@ -1,0 +1,82 @@
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.9 # Utilisez une version compatible
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms256m -Xmx256m 
+      - xpack.security.enabled=false # Désactiver la sécurité pour la simplicité de l'exercice
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    networks:
+      - elk_net
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.17.9
+    container_name: logstash
+    volumes:
+      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro # Monte le pipeline de Logstash
+    ports:
+      - "5000:5000/tcp" # Port pour recevoir les logs de Flask
+    depends_on:
+      - elasticsearch
+    networks:
+      - elk_net
+    environment:
+        LS_JAVA_OPTS: "-Xms128m -Xmx128m" # Allouer de la mémoire
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.17.9
+    container_name: kibana
+    ports:
+      - "5601:5601" # Port UI Kibana
+    depends_on:
+      - elasticsearch
+    networks:
+      - elk_net
+    environment:
+      ELASTICSEARCH_HOSTS: '["http://elasticsearch:9200"]' # Dit à Kibana où trouver Elasticsearch
+
+  flask_app_1: # Anciennement flask_app
+    build: ./app
+    container_name: flask_app_1
+    ports:
+      - "5001:8000" # Application Flask 1 accessible sur http://localhost:5001
+    environment:
+      - LOGSTASH_HOST=logstash
+      - LOGSTASH_PORT=5000
+      - APP_INSTANCE_ID=app1 # Identifiant pour cette instance
+      - APP_TIMESTAMP_OFFSET_SECONDS=0 # Pas de décalage pour la première app
+    depends_on:
+      - logstash
+    networks:
+      - elk_net
+
+  flask_app_2: # Nouvelle instance de Flask
+    build: ./app # Utilise la même image
+    container_name: flask_app_2
+    ports:
+      - "5002:8000" # Application Flask 2 accessible sur http://localhost:5002
+    environment:
+      - LOGSTASH_HOST=logstash
+      - LOGSTASH_PORT=5000
+      - APP_INSTANCE_ID=app2 # Identifiant pour cette instance
+      - APP_TIMESTAMP_OFFSET_SECONDS=-3600 # Simule un décalage d'une heure en arrière
+    depends_on:
+      - logstash
+    networks:
+      - elk_net
+
+volumes:
+  es_data: # Docker gère ce volume pour la persistance des données d'Elasticsearch
+
+networks:
+  elk_net:
+    driver: bridge

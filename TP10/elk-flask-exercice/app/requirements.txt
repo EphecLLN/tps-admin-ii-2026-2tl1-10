@@ -1,0 +1,2 @@
+Flask
+python-logstash-async # Pour envoyer les logs à Logstash
